@@ -11,6 +11,7 @@ import {
   type RateOverrides,
 } from "../lib/pricing";
 import { fmtInt, fmtUSD } from "../lib/format";
+import { buildReport } from "../lib/report";
 import EmptyState from "./EmptyState";
 import Timeline from "./Timeline";
 import DetailPane from "./DetailPane";
@@ -43,6 +44,7 @@ export default function SessionLensApp() {
   const [selected, setSelected] = useState(0);
   const [helpOpen, setHelpOpen] = useState(false);
   const [overrides, setOverrides] = useState<RateOverrides>({});
+  const [copied, setCopied] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const events: SessionEvent[] = useMemo(
@@ -132,6 +134,23 @@ export default function SessionLensApp() {
     setQuery("");
     setSelected(eventIndex);
   }, []);
+
+  const copyReport = useCallback(() => {
+    if (!session) return;
+    const text = buildReport({
+      sourceName,
+      format: session.format,
+      parseFailures: session.parseFailures,
+      events,
+      anomalies,
+      totalTokens,
+      totalCost,
+    });
+    void navigator.clipboard?.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }, [session, sourceName, events, anomalies, totalTokens, totalCost]);
 
   // Keep the selected row visible.
   useEffect(() => {
@@ -260,6 +279,13 @@ export default function SessionLensApp() {
                 placeholder="filter ( / )"
                 className="w-44 rounded border border-line bg-raised px-2 py-1 font-mono text-xs text-zinc-200 placeholder:text-zinc-400"
               />
+              <button
+                type="button"
+                onClick={copyReport}
+                className="rounded border border-line bg-raised px-2 py-1 font-mono text-xs text-zinc-300 hover:border-zinc-500"
+              >
+                {copied ? "copied" : "copy report"}
+              </button>
               <button
                 type="button"
                 onClick={reset}

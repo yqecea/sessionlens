@@ -21,6 +21,8 @@ into:
 - anomaly flags pinned to the exact turn: retry loops, cold-cache turns,
   token spikes above the session median, context window pressure
 - a detail pane for every event, driven entirely by keyboard
+- a one-click `copy report` summary (totals, flags, largest turns) for pasting
+  into an issue or a chat
 
 ## Supported formats
 
