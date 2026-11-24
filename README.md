@@ -1,5 +1,7 @@
 # sessionlens
 
+**Live:** https://yqecea.github.io/sessionlens/
+
 Agent trace and token-cost debugger that runs entirely in your browser.
 Paste a `.jsonl` transcript from Claude Code, Codex CLI or Hermes and get a
 navigable timeline with per-turn token usage, editable cost estimates and
